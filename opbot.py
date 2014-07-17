@@ -25,7 +25,7 @@ class OpBot(Bot):
 			announce = re.match(secrets.announce_password + " (#\w*): (.*)", what)
 			self.announce(announce.group(2),announce.group(1))
 		elif re.match(r"beep (boop beep|beep boop) boop.*", what.lower()): # Silly message
-			self.say("Climax!", fromwhom)
+			self.me("climaxes", fromwhom)
 		else: # Default silly messages
 			messages = [
 				"Greetings, human.",
@@ -63,8 +63,8 @@ class OpBot(Bot):
 					else:
 						self.say("No.",where)
 				else:
-					if random.random() < .05:
-						self.kick(fromwhom,where,"Fudge off, you fuck!") # Kick people about 1 in 20 times
+					if random.random() < .2:
+						self.kick(fromwhom,where,"Fudge off, you fuck!") # Kick people about 1 in 5 times
 					else:
 						self.say("No.",where)
 		elif re.match("beep (boop beep|beep boop) boop.*", what.lower()):
