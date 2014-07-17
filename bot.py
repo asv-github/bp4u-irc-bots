@@ -37,7 +37,7 @@ class Bot:
 		def handle_msg(self, what, fromwhom, towhom):
 			pass
 
-		def handle_pm(self, what, fromwhom):
+		def handle_pm(self, what, fromwhom): # PM = private message
 			pass
 
 		def handle_join(self, who, where):
@@ -47,6 +47,9 @@ class Bot:
 			pass
 
 		def handle_quit(self, who, why):
+			pass
+		
+		def handle_nickchange(self, oldnick, newnick): # Called when other people change their nicknames
 			pass
 	
 		def process(self):
@@ -81,6 +84,15 @@ class Bot:
 				who = join.group(1).strip()
 				why = join.group(2).strip()
 				self.handle_quit(who, why)
+
+			nick = re.match(r":(\w+)!\S* NICK :(.*)", line)
+			if (part):
+				oldnick = join.group(1).strip()
+				newnick = join.group(2).strip()
+				if oldnick == self.nick:
+					self.nick = newnick
+				else:
+					self.handle_nickchange(oldnick, newnick)
 
 class SimpleOpBot(Bot):
 	def handle_pm(self, what, fromwhom):
