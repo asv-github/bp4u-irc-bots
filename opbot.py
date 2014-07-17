@@ -67,6 +67,8 @@ class OpBot(Bot):
 						self.kick(fromwhom,where,"Fudge off, you fuck!") # Kick people about 1 in 20 times
 					else:
 						self.say("No.",where)
+		elif re.match("beep (boop beep|beep boop) boop.*", what.lower()):
+			self.me("climaxes",where)
 
 	def handle_join(self, who, where):
 		self.hop(who, where)

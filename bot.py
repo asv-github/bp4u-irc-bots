@@ -19,6 +19,9 @@ class Bot:
 		def say(self, what, whom):
 			self.write('PRIVMSG ' + whom + ' :' + what)
 
+		def me(self, what, whom): # e.g. "/me does stuff"
+			self.write('PRIVMSG ' + whom + ' :ACTION ' + what + '')
+
 		def announce(self, what, whom):
 			self.write('NOTICE ' + whom + ' :' + what)
 
