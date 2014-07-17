@@ -1,0 +1,21 @@
+import re, urllib, urllib2
+from bot import *
+
+class MusicazooBot(Bot):
+	def send_to_musicazoo(self, what, who_to_tell):
+		mz = re.match("mz (.*)", what)
+		if mz:
+			query = mz.group(1).strip()
+			f = urllib2.urlopen("http://musicazoo.mit.edu/nlp", urllib.urlencode([('q',query)]))
+			for line in f:
+				self.say(line,who_to_tell)
+
+	def handle_msg(self, what, fromwhom, where):
+		self.send_to_musicazoo(what, where)
+		
+	def handle_pm(self, what, fromwhom):
+		self.send_to_musicazoo(what, fromwhom)
+
+m = MusicazooBot(nick="MzBot", join="#tetazoo", user="mzbot", longuser="Musicazoo Bot")
+while True:
+	m.process()
