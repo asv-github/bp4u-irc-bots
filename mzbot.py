@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import re, urllib, urllib2
 from bot import *
 
