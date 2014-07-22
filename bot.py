@@ -7,9 +7,10 @@ class Bot:
 		def __init__(self, host='127.0.0.1', port=6667, nick="Robot", user="Robot", longuser="I am a robot!", join="#yolo"):
 			self.s = socket.socket()
 			self.s.connect((host,port))
+			self.f = self.s.makefile()
 			
 			self.write = lambda x : self.s.send(x + crlf)
-			self.read = lambda bufsize : self.s.recv(bufsize)
+			self.read = self.f.readline
 			
 			self.nick = nick
 			self.write('NICK ' + nick)
@@ -56,7 +57,7 @@ class Bot:
 			pass
 	
 		def process(self):
-			line = self.read(256);
+			line = self.read();
 			if re.match("PING :.*", line):
 				self.write("PONG :" + line[6:])
 				
