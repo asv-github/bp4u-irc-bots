@@ -35,6 +35,9 @@ class Bot:
 		def kick(self, user, chan, reason=''):
 			self.write('KICK ' + chan + ' ' + user + ' :' + reason)
 
+		def join(self, chan):
+			self.write('JOIN ' + chan)
+
 		def nick(self, newnick):
 			self.write('NICK ' + newnick) # In case there's an error, we update self.nick when the actually responds that the nick was updated
 
