@@ -7,9 +7,15 @@ class MusicazooBot(Bot):
 		mz = re.match("mz (.*)", what)
 		if mz:
 			query = mz.group(1).strip()
-			f = urllib2.urlopen("http://musicazoo.mit.edu/nlp", urllib.urlencode([('q',query)]))
-			for line in f:
-				self.say(line,who_to_tell)
+			try:
+				f = urllib2.urlopen("http://musicazoo.mit.edu/nlp", urllib.urlencode([('q',query)]))
+				for line in f:
+					self.say(line,who_to_tell)
+			except e:
+				print("Error!\nQuery = \"%s\"\nError: %s" % (what, query, str(e)))
+				self.say("OH SHIT!!!",who_to_tell)
+				self.say("There was an error talking to musicazoo.",who_to_tell)
+				self.say(":(",who_to_tell)
 
 	def handle_msg(self, what, fromwhom, where):
 		self.send_to_musicazoo(what, where)
