@@ -9,4 +9,5 @@ except ImportError:
 	# Default secrets follow.
 	privesc_password = "su"
 	announce_password = "\(clears throat\)"
-
+	god_user = "ircop_user"
+	god_pass = "ircop_pass"
