@@ -72,7 +72,7 @@ class OpBot(Bot):
 			self.me("climaxes",where)
 
 	def handle_join(self, who, where):
-		self.hop(who, where)
+		self.op(who, where)
 
 
 
