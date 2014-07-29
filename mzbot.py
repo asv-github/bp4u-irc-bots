@@ -22,6 +22,11 @@ class MusicazooBot(Bot):
 		
 	def handle_pm(self, what, fromwhom):
 		self.send_to_musicazoo(what, fromwhom)
+	
+	def handle_getting_kicked(self, kicker, where, why):
+		# Immediately rejoin, and cry to GodBot	
+		self.join(where)
+		self.say("Help! %s kicked me from %s!" % (kicker, where),"God")
 
 m = MusicazooBot(nick="MzBot", join="#tetazoo", user="mzbot", longuser="Musicazoo Bot")
 while True:

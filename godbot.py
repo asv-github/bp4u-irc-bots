@@ -11,7 +11,7 @@ class GodBot(Bot):
 		Bot.__init__(self,**kwargs)
 		self.write("OPER %s %s" % (secrets.god_user, secrets.god_pass))
 	def handle_pm(self, what, fromwhom):
-		if fromwhom in ["OpBot", "FailBot", "LowLevelLogBot", "MzBot", "ProtectedMinority"]:
+		if fromwhom in ["OpBot", "FailBot", "LowLevelLogBot", "MzBot"]:
 			kickedprayer = re.match("Help! (.*) kicked me from #(.*)!" ,what)
 			if kickedprayer:
 				evildoer = kickedprayer.group(1)

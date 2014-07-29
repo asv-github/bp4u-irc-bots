@@ -104,8 +104,8 @@ class Bot:
 			self.handle_part(who, where)
 		quit = re.match(r":(\w+)!\S* QUIT :(.*)", line)
 		if (quit):
-			who = part.group(1).strip()
-			why = part.group(2).strip()
+			who = quit.group(1).strip()
+			why = quit.group(2).strip()
 			self.handle_quit(who, why)
 		nick = re.match(r":(\w+)!\S* NICK :(.*)", line)
 		if (nick):
