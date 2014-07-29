@@ -20,6 +20,7 @@ class GodBot(Bot):
 				self.join(chan)
 				self.op(self.nick, chan)
 				self.kick(evildoer, chan, reason)
+				self.op(fromwhom, chan)
 				self.part(chan)
 				print "Kicked %s from %s for kicking %s." % (evildoer, chan, fromwhom)
 		else:
