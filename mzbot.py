@@ -11,7 +11,7 @@ class MusicazooBot(Bot):
 				f = urllib2.urlopen("http://musicazoo.mit.edu/nlp", urllib.urlencode([('q',query)]))
 				for line in f:
 					self.say(line,who_to_tell)
-			except e:
+			except urllib2.HTTPError as e:
 				print("Error!\nQuery = \"%s\"\nError: %s" % (what, query, str(e)))
 				self.say("OH SHIT!!!",who_to_tell)
 				self.say("There was an error talking to musicazoo.",who_to_tell)
