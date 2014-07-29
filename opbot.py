@@ -74,7 +74,7 @@ class OpBot(Bot):
 	def handle_join(self, who, where):
 		self.op(who, where)
 
-	def handle_getting_kicked(self, kicker, where, why)
+	def handle_getting_kicked(self, kicker, where, why):
 		# Immediately rejoin, and cry to GodBot	
 		self.join(where)
 		self.say("Help! %s kicked me from %s!" % (kicker, where),"God")
