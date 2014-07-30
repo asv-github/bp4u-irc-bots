@@ -12,12 +12,12 @@ class MusicazooBot(Bot):
 				for line in f:
 					self.say(line,who_to_tell)
 			except urllib2.HTTPError as e:
-				self.report_error(query,e)
+				self.report_error(query,e,who_to_tell)
 			except urllib2.URLError as e:
-				self.report_error(query,e)
+				self.report_error(query,e,who_to_tell)
 			except:
-				self.report_error(query,"Unknown error! :-/")
-	def report_error(self,query,e):
+				self.report_error(query,"Unknown error! :-/",who_to_tell)
+	def report_error(self,query,e,who_to_tell):
 		print("Error!\nQuery = \"%s\"\nError: %s" % (query, str(e)))
 		self.say("OH SHIT!!!",who_to_tell)
 		self.say("There was an error talking to musicazoo.",who_to_tell)
