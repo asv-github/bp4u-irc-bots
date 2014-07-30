@@ -17,7 +17,7 @@ class MusicazooBot(Bot):
 				self.report_error(e)
 			except:
 				self.report_error("Unknown error! :-/")
-	def report_error(e):
+	def report_error(self,e):
 		print("Error!\nQuery = \"%s\"\nError: %s" % (what, query, str(e)))
 		self.say("OH SHIT!!!",who_to_tell)
 		self.say("There was an error talking to musicazoo.",who_to_tell)
