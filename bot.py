@@ -1,11 +1,31 @@
 #!/usr/bin/python
 import socket, re
+try:
+	import ssl
+except ImportError:
+	print("WARNING: Your version of python does not have any SSL support.")
 
 crlf = '\r\n'.encode('UTF-8')
 class Bot:
-	def __init__(self, host='127.0.0.1', port=6667, nick="Robot", user="Robot", longuser="I am a robot!", join="#yolo"):
-		self.s = socket.socket()
-		self.s.connect((host,port))
+	def __init__(self, host='127.0.0.1', port=6667, usessl=False, nick="Robot", user="Robot", longuser="I am a robot!", join="#yolo"):
+		if usessl: # Set up an SSL socket
+			try:
+				context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+			except:
+				print("ERROR: Can't create an SSL context. You're probably trying to connect using SSL under Python 2. You need to use Python 3.")
+				raise
+			context.verify_mode = ssl.CERT_REQUIRED
+			context.load_verify_locations("/etc/ssl/cert.pem") # May be different for different systems
+			context.set_ciphers("DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA")
+			self.s = context.wrap_socket(socket.socket(socket.AF_INET))
+			self.s.connect((host,port))
+			cert = self.s.getpeercert()
+			ssl.match_hostname(cert,host)
+			print("Successfully connected using cipher %s. Huzzah!"%self.s.cipher()[0])
+		else: # Set up a normal socket
+			self.s = socket.socket()
+			self.s.connect((host,port))
+		
 		self.f = self.s.makefile()
 		
 		self.write = lambda x : self.s.send(x.encode('UTF-8') + crlf)
