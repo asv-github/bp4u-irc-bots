@@ -1,14 +1,14 @@
 #!/usr/bin/python
 import socket, re
 
-crlf = '\r\n'
+crlf = '\r\n'.encode('UTF-8')
 class Bot:
 	def __init__(self, host='127.0.0.1', port=6667, nick="Robot", user="Robot", longuser="I am a robot!", join="#yolo"):
 		self.s = socket.socket()
 		self.s.connect((host,port))
 		self.f = self.s.makefile()
 		
-		self.write = lambda x : self.s.send(x + crlf)
+		self.write = lambda x : self.s.send(x.encode('UTF-8') + crlf)
 		self.read = self.f.readline
 		
 		self.nick = nick
