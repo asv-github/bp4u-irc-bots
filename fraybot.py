@@ -26,13 +26,13 @@ class FrayBot(Bot):
 		for chan in self.chans:
 			for line in message:
 				self.say(line, chan)
-	def repeatedly_spam_reuse(self, period=3600):
+	def repeatedly_spam_reuse(self, avgperiod=3600):
 		self.spam_reuse();
-		self.spamtimer = threading.Timer(period, self.repeatedly_spam_reuse, kwargs={'period':period}) # Call the same method again after period
+		self.spamtimer = threading.Timer(random.expovariate(1.0 / avgperiod), self.repeatedly_spam_reuse, kwargs={'avgperiod':avgperiod}) # Poisson process with average time between spams of avgperiod
 		self.spamtimer.start()
 		
 if __name__ == "__main__":
-	fraybot = FrayBot()
-	fraybot.repeatedly_spam_reuse()
+	fraybot = FrayBot(chans=['#tetazoo','#nanometer'])
+	fraybot.repeatedly_spam_reuse(avgperiod=24*7*3600)
 	while True:
 		fraybot.process()
