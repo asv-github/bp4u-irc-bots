@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from bot import *
-import re, random
+import re, random, threading
 class FrayBot(Bot):
 	initdefaults = {"join": "", "nick": "FrayBot", "user": "fraybot", "longuser": "H. Fraybot"}
 	def __init__(self,  chans=["#yolo"], **kwargs):
@@ -16,17 +16,23 @@ class FrayBot(Bot):
 	def handle_pm(self, what, fromwhom):
 		if what == "books plz":
 			self.spam_reuse()
-		self.say("Sorry, the item has been claimed.",fromwhom)
+		else:
+			self.say("Sorry, the item has been claimed.",fromwhom)
 	def spam_reuse(self):
 		# Construct a spammy reuse message
 		numbooks = int(random.triangular(3.5, 9.5, 6.5)) # Number of books: Let's try 6, plus or minus 3. (.5 corrects for rounding down)
 		books = random.sample(self.booklist,numbooks)
-		message = ["Reuse: Books (will send ONLY if you send interoffice address):"] + [str(i) + ". " + books[i] for i in range(numbooks)]
+		message = ["Reuse: Books (will send ONLY if you send interoffice address):"] + [str(i+1) + ". " + books[i] for i in range(numbooks)]
 		for chan in self.chans:
 			for line in message:
 				self.say(line, chan)
-
+	def repeatedly_spam_reuse(self, period=3600):
+		self.spam_reuse();
+		self.spamtimer = threading.Timer(period, self.repeatedly_spam_reuse, kwargs={'period':period}) # Call the same method again after period
+		self.spamtimer.start()
+		
 if __name__ == "__main__":
 	fraybot = FrayBot()
+	fraybot.repeatedly_spam_reuse()
 	while True:
 		fraybot.process()
