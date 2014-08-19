@@ -7,7 +7,7 @@ except ImportError:
 
 crlf = '\r\n'.encode('UTF-8')
 class Bot:
-	def __init__(self, host='127.0.0.1', port=6667, usessl=False, nick="Robot", user="Robot", longuser="I am a robot!", join="#yolo"):
+	def __init__(self, host='127.0.0.1', port=6667, usessl=False, nick="Robot", user="Robot", longuser="I am a robot!", chans={"#yolo"}):
 		if usessl: # Set up an SSL socket
 			try:
 				context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
@@ -16,7 +16,7 @@ class Bot:
 				raise
 			context.verify_mode = ssl.CERT_REQUIRED
 			context.load_verify_locations("/etc/ssl/cert.pem") # May be different for different systems
-			context.set_ciphers("DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA")
+			context.set_ciphers("DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA") # Only the good ones
 			self.s = context.wrap_socket(socket.socket(socket.AF_INET))
 			self.s.connect((host,port))
 			cert = self.s.getpeercert()
@@ -34,17 +34,19 @@ class Bot:
 		self.nick = nick
 		self.write('NICK ' + nick)
 		self.write('USER ' + user + ' * * :' + longuser)
-		if join != "":
-			self.write('JOIN ' + join)
+		if chans:
+			for chan in chans:
+				self.write('JOIN ' + chan)
+		self.chans = set(chans)
 
-	def say(self, what, whom): #say something to a person or channel
-		self.write('PRIVMSG ' + whom + ' :' + what)
+	def say(self, what, towhom): #say something to a person or channel
+		self.write('PRIVMSG ' + towhom + ' :' + what)
 
-	def me(self, what, whom): # e.g. "/me does stuff"
-		self.write('PRIVMSG ' + whom + ' :ACTION ' + what + '')
+	def me(self, what, towhom): # e.g. "/me does stuff"
+		self.write('PRIVMSG ' + towhom + ' :ACTION ' + what + '')
 
-	def announce(self, what, whom): # It's actually basically the same as "say", sadly.
-		self.write('NOTICE ' + whom + ' :' + what)
+	def announce(self, what, towhom): # It's actually basically the same as "say", sadly.
+		self.write('NOTICE ' + towhom + ' :' + what)
 
 	def op(self, user, chan):
 		self.write('MODE ' + chan + ' +o ' + user)
@@ -57,9 +59,11 @@ class Bot:
 
 	def join(self, chan):
 		self.write('JOIN ' + chan)
+		self.chans.add(chan)
 
 	def part(self, chan):
 		self.write('PART ' + chan)
+		self.chans.remove(chan)
 
 	def nick(self, newnick):
 		self.write('NICK ' + newnick) # In case there's an error, we update self.nick when the server actually responds that the nick was updated
@@ -82,10 +86,10 @@ class Bot:
 	def handle_nickchange(self, oldnick, newnick): # Called when other people change their nicknames
 		pass
 
-	def handle_kick(self, kickee, kicker, where, why): # Handle someone else getting kicked
+	def handle_kick(self, kickee, kicker, chan, why): # Handle someone else getting kicked
 		pass
 
-	def handle_getting_kicked(self, kicker, where, why): # Handle the bot getting kicked
+	def handle_getting_kicked(self, kicker, chan, why): # Handle the bot getting kicked
 		pass
 
 	def process(self):
@@ -143,6 +147,7 @@ class Bot:
 			why = kick.group(4).strip()
 			if kickee == self.nick:
 				self.handle_getting_kicked(kicker,where,why)
+				self.chans.remove(where)
 			else:
 				self.handle_kick(kickee,kicker,where,why)
 
