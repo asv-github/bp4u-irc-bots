@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import socket, re
+import socket, re, time
 try:
 	import ssl
 except ImportError:
@@ -39,9 +39,16 @@ class Bot:
 
 	def say(self, what, whom): #say something to a person or channel
 		self.write('PRIVMSG ' + whom + ' :' + what)
-
+	
 	def me(self, what, whom): # e.g. "/me does stuff"
 		self.write('PRIVMSG ' + whom + ' :ACTION ' + what + '')
+
+	def type(self, what, towhom, secondsperchar=.1): # Simulates typing something by sleeping based on message length. Also handles "/me does something" appropriately.
+		time.sleep(secondsperchar * len(what))
+		if re.match("/me ", what):
+			self.me(what[4:], towhom)
+		else:
+			self.say(what, towhom)
 
 	def announce(self, what, whom): # It's actually basically the same as "say", sadly.
 		self.write('NOTICE ' + whom + ' :' + what)
@@ -103,7 +110,7 @@ class Bot:
 			self.write("PONG :" + line[6:])
 			
 		nickchars = r"[a-zA-Z0-9\[\\\]-_|{}`]"
-		msg = re.match(r":(\w+)!\S* PRIVMSG (\S+) :(.*)", line)
+		msg = re.match(r":(" + nickchars + "+)!\S* PRIVMSG (\S+) :(.*)", line)
 		if (msg):
 			fromwhom = msg.group(1).strip()
 			towhom = msg.group(2).strip()
@@ -112,22 +119,22 @@ class Bot:
 				self.handle_pm(what, fromwhom)
 			else:
 				self.handle_msg(what, fromwhom, towhom)
-		join = re.match(r":(\w+)!\S* JOIN :(.*)", line)
+		join = re.match(r":(" + nickchars + "+)!\S* JOIN :(.*)", line)
 		if (join):
 			who = join.group(1).strip()
 			where = join.group(2).strip()
 			self.handle_join(who, where)
-		part = re.match(r":(\w+)!\S* PART :(.*)", line)
+		part = re.match(r":(" + nickchars + "+)!\S* PART :(.*)", line)
 		if (part):
 			who = part.group(1).strip()
 			where = part.group(2).strip()
 			self.handle_part(who, where)
-		quit = re.match(r":(\w+)!\S* QUIT :(.*)", line)
+		quit = re.match(r":(" + nickchars + "+)!\S* QUIT :(.*)", line)
 		if (quit):
 			who = quit.group(1).strip()
 			why = quit.group(2).strip()
 			self.handle_quit(who, why)
-		nick = re.match(r":(\w+)!\S* NICK :(.*)", line)
+		nick = re.match(r":(" + nickchars + "+)!\S* NICK :(.*)", line)
 		if (nick):
 			oldnick = nick.group(1).strip()
 			newnick = nick.group(2).strip()
@@ -135,7 +142,7 @@ class Bot:
 				self.nick = newnick
 			else:
 				self.handle_nickchange(oldnick, newnick)
-		kick = re.match(r":(\w+)!\S* KICK (\S+) (\S+) :(.*)", line)
+		kick = re.match(r":(" + nickchars + "+)!\S* KICK (\S+) (\S+) :(.*)", line)
 		if (kick):
 			kicker = kick.group(1).strip()
 			where = kick.group(2).strip()
