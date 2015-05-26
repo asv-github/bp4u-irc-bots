@@ -20,7 +20,7 @@ class MusicazooBot(Bot):
 					for line in f:
 						self.say(line,who_to_tell)
 				else: #Error!
-					self.report_error(query,result['error'],who_to_tell)
+					self.say("Musicazoo reported an error: " + result['error'],who_to_tell)
 			except urllib2.HTTPError as e:
 				self.report_error(query,e,who_to_tell)
 			except urllib2.URLError as e:
@@ -29,9 +29,9 @@ class MusicazooBot(Bot):
 				self.report_error(query,"Unknown error! :-/",who_to_tell)
 	def report_error(self,query,e,who_to_tell):
 		print("Error!\nQuery = \"%s\"\nError: %s" % (query, str(e)))
-		self.say("OH SHIT!!!",who_to_tell)
-		self.say("There was an error talking to musicazoo.",who_to_tell)
-		self.say(":(",who_to_tell)
+		self.say("OH SHIT!!! " + 
+			"There was an error talking to musicazoo. " +
+			":(",who_to_tell)
 	def handle_msg(self, what, fromwhom, where):
 		self.send_to_musicazoo(what, where)
 		
