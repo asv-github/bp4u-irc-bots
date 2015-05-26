@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import re, urllib, urllib2
+import re, urllib, urllib2, json
 from bot import *
 
 class MusicazooBot(Bot):
@@ -8,9 +8,19 @@ class MusicazooBot(Bot):
 		if mz:
 			query = mz.group(1).strip()
 			try:
-				f = urllib2.urlopen("http://musicazoo.mit.edu/nlp", urllib.urlencode([('q',query)]))
-				for line in f:
-					self.say(line,who_to_tell)
+				# This is the mz script, courtesy ervanalb
+				json_req={"cmd":"do","args":{"message":query}}
+				req = urllib2.Request("http://musicazoo.mit.edu/nlp")
+				req.add_header('Content-type', 'text/json')
+				req.data=json.dumps(json_req)
+				handler = urllib2.urlopen(req)
+				result=json.loads(handler.read())
+				if result['success']:
+					f = result['result'].split('\n')
+					for line in f:
+						self.say(line,who_to_tell)
+				else: #Error!
+					self.report_error(query,result['error'],who_to_tell)
 			except urllib2.HTTPError as e:
 				self.report_error(query,e,who_to_tell)
 			except urllib2.URLError as e:
@@ -33,6 +43,6 @@ class MusicazooBot(Bot):
 		self.join(where)
 		self.say("Help! %s kicked me from %s!" % (kicker, where),"God")
 
-m = MusicazooBot(nick="MzBot", join="#tetazoo", user="mzbot", longuser="Musicazoo Bot")
+m = MusicazooBot(nick="MzBot", chans={"#tetazoo"}, user="mzbot", longuser="Musicazoo Bot")
 while True:
 	m.process()
