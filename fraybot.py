@@ -2,13 +2,12 @@
 from bot import *
 import re, random, threading
 class FrayBot(Bot):
-	initdefaults = {"join": "", "nick": "FrayBot", "user": "fraybot", "longuser": "H. Fraybot"}
-	def __init__(self,  chans=["#yolo"], **kwargs):
+	initdefaults = {"chans", {"#yolo"}, "nick": "FrayBot", "user": "fraybot", "longuser": "H. Fraybot"}
+	def __init__(self, **kwargs):
 		for k, v in self.initdefaults.items():
 			if k not in kwargs:
 				kwargs[k] = v
 		Bot.__init__(self,**kwargs)
-		self.chans = chans
 		print("Loading booklist into memory....")
 		with open("books","r", encoding="UTF-8") as booklistfile:
 			self.booklist = list(filter(lambda s : not s.startswith("#"), booklistfile.readlines()))
