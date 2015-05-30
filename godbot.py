@@ -3,7 +3,7 @@ from bot import *
 import re, random
 import secrets
 class GodBot(Bot):
-	initdefaults = {"join": "", "nick": "God", "user": "God", "longuser": "God"}
+	initdefaults = {"chans": {}, "nick": "God", "user": "God", "longuser": "God"}
 	def __init__(self, **kwargs):
 		for k, v in self.initdefaults.items():
 			if k not in kwargs:
@@ -11,7 +11,7 @@ class GodBot(Bot):
 		Bot.__init__(self,**kwargs)
 		self.write("OPER %s %s" % (secrets.god_user, secrets.god_pass))
 	def handle_pm(self, what, fromwhom):
-		if fromwhom in ["OpBot", "FailBot", "LowLevelLogBot", "MzBot"]:
+		if fromwhom in ["OpBot", "RichardStallbot", "SmartBot", "MetaBot", "MzBot"]:
 			kickedprayer = re.match("Help! (.*) kicked me from #(.*)!" ,what)
 			if kickedprayer:
 				evildoer = kickedprayer.group(1)
