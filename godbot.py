@@ -23,6 +23,12 @@ class GodBot(Bot):
 				self.op(fromwhom, chan)
 				self.part(chan)
 				print "Kicked %s from %s for kicking %s." % (evildoer, chan, fromwhom)
+			
+			deoppedprayer = re.match("Help! (.*) deopped me on #(.*)!" ,what)
+			if deoppedprayer:
+				chan = "#" + deoppedprayer.group(2)
+				self.op(fromwhom, chan)
+				print "Reopped %s on %s." % (fromwhom, chan)
 		else:
 			self.me("isn't real.",fromwhom) # God isn't real
 god = GodBot()

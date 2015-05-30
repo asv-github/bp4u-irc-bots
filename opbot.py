@@ -79,6 +79,9 @@ class OpBot(Bot):
 		self.join(where)
 		self.say("Help! %s kicked me from %s!" % (kicker, where),"God")
 
+	def handle_my_modechange(self, changer, mode, where):
+		if mode == "-o": # Cry to GodBot	
+			self.say("Help! %s deopped me on %s!" % (changer, where),"God")
 
 
 Oppy = OpBot(chans={"#tetazoo"}, nick="OpBot", user="OpBot", longuser="I am a robot!")

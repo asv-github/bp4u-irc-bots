@@ -164,6 +164,18 @@ class Bot:
 			else:
 				self.handle_kick(kickee,kicker,where,why)
 
+		modechange = re.match(r":(" + nickchars + "+)!\S* MODE (\S+) (\S+) (\S+)", line)
+		if (modechange):
+			changer = modechange.group(1).strip()
+			where = modechange.group(2).strip()
+			mode = modechange.group(3).strip()
+			changee = modechange.group(4).strip()
+			if changee == self.nick:
+				self.handle_my_modechange(changer,mode,where)
+			else:
+				pass
+				#self.handle_kick(kickee,kicker,where,why)
+
 class SimpleOpBot(Bot):
 	def handle_pm(self, what, fromwhom):
 		self.say("I am a robot. Beep boop.", fromwhom)
