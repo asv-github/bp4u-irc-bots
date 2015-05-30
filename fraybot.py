@@ -2,7 +2,7 @@
 from bot import *
 import re, random, threading
 class FrayBot(Bot):
-	initdefaults = {"chans", {"#yolo"}, "nick": "FrayBot", "user": "fraybot", "longuser": "H. Fraybot"}
+	initdefaults = {"chans": {"#yolo"}, "nick": "FrayBot", "user": "fraybot", "longuser": "H. Fraybot"}
 	def __init__(self, **kwargs):
 		for k, v in self.initdefaults.items():
 			if k not in kwargs:
