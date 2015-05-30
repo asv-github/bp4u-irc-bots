@@ -81,6 +81,6 @@ class OpBot(Bot):
 
 
 
-Oppy = OpBot(join="#tetazoo", nick="OpBot", user="OpBot", longuser="I am a robot!")
+Oppy = OpBot(chans={"#tetazoo"}, nick="OpBot", user="OpBot", longuser="I am a robot!")
 while True:
 	Oppy.process()

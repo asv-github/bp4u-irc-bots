@@ -16,7 +16,7 @@ class Bot:
 				raise
 			context.verify_mode = ssl.CERT_REQUIRED
 			context.load_verify_locations("/etc/ssl/cert.pem") # May be different for different systems
-			context.set_ciphers("DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA") # Only the good ones
+			context.set_ciphers("DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256") # Only the good ones
 			self.s = context.wrap_socket(socket.socket(socket.AF_INET))
 			self.s.connect((host,port))
 			cert = self.s.getpeercert()
@@ -100,6 +100,9 @@ class Bot:
 		pass
 
 	def handle_getting_kicked(self, kicker, chan, why): # Handle the bot getting kicked
+		pass
+
+	def handle_my_modechange(self, changer, mode, chan): # Handle the bot getting de-opped, banned, etc.
 		pass
 
 	def process(self):
