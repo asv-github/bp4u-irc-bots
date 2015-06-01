@@ -16,6 +16,9 @@ class GodBot(Bot):
 			if kickedprayer:
 				evildoer = kickedprayer.group(1)
 				chan = "#" + kickedprayer.group(2)
+				if evildoer.lower() == self.nick.lower():
+					print "Apparently I kicked %s on %s?" % (evildoer, chan)
+					return
 				reason = random.choice(["FEEL MY WRATH!","Fudge off, you fuck!","Don't fucking kick the bots!","What the fuck is wrong with you?!","Why did you kick poor %s?"%fromwhom])
 				self.join(chan)
 				self.op(self.nick, chan)
