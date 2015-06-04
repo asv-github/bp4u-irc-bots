@@ -3,6 +3,9 @@ import socket, time, re, random
 from bot import *
 import secrets
 
+def log(message):
+	print "[%s] %s" % (time.asctime(), message)
+
 class OpBot(Bot):
 	nicelist = dict()
 	listeningto = ''
@@ -19,7 +22,7 @@ class OpBot(Bot):
 				self.nicelist[fromwhom] = random.randint(2,10)
 				self.say(";)", fromwhom)
 			except e:
-				print e
+				log(e)
 				self.say(":o", fromwhom) 
 		elif re.match(secrets.announce_password + " (#\w*): (.*)", what): # Have it make an anouncment
 			announce = re.match(secrets.announce_password + " (#\w*): (.*)", what)
@@ -76,13 +79,14 @@ class OpBot(Bot):
 
 	def handle_getting_kicked(self, kicker, where, why):
 		# Immediately rejoin, and cry to GodBot	
+		log("%s kicked me from %s!" % (kicker, where))
 		self.join(where)
 		self.say("Help! %s kicked me from %s!" % (kicker, where),"God")
 
 	def handle_my_modechange(self, changer, mode, where):
 		if mode == "-o": # Cry to GodBot	
+			log("%s deopped me on %s!" % (changer, where))
 			self.say("Help! %s deopped me on %s!" % (changer, where),"God")
-
 
 Oppy = OpBot(chans={"#tetazoo"}, nick="OpBot", user="OpBot", longuser="I am a robot!")
 while True:
